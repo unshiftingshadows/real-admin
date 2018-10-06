@@ -1,6 +1,6 @@
 {
   "name": "real-admin",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A tool to manage all REAL Apps",
   "productName": "REAL Admin",
   "cordovaId": "org.cordova.quasar.app",
