@@ -1,4 +1,5 @@
 // Configuration for your app
+// const path = require('path')
 
 module.exports = function (ctx) {
   return {
@@ -34,6 +35,13 @@ module.exports = function (ctx) {
           loader: 'eslint-loader',
           exclude: /node_modules/
         })
+        // cfg.resolve = {
+        //   extensions: ['.js', '.vue', '.json'],
+        //   alias: {
+        //     ...cfg.resolve.alias,
+        //     '@': path.resolve(__dirname, 'src')
+        //   }
+        // }
       }
     },
     devServer: {
@@ -57,6 +65,7 @@ module.exports = function (ctx) {
         'QPopover',
         'QField',
         'QInput',
+        'QSelect',
         'QModal',
         'QIcon',
         'QChip',
@@ -66,7 +75,9 @@ module.exports = function (ctx) {
         'QItemMain',
         'QItemSide',
         'QItemTile',
-        'QItemSeparator'
+        'QItemSeparator',
+        'QSpinner',
+        'QInnerLoading'
       ],
       directives: [
         'Ripple',

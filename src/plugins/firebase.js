@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/functions'
 import FieryVue from 'fiery-vue'
+import duix from 'duix'
 
 /**
  * Settings for dev firebase instance
@@ -64,6 +65,38 @@ function callCloudFunction (name, data) {
   return fbapp.functions().httpsCallable(name)(data)
 }
 
+// Set up Church List in duix
+duix.set('church', [])
+
+firestore.collection('church').onSnapshot((querySnap) => {
+  duix.set('church', querySnap.docs.map(e => { return { id: e.id, ...e.data() } }))
+})
+
+function store (name) {
+  return duix.get(name)
+}
+
+function subscribe (name, callback) {
+  return duix.subscribe(name, callback)
+}
+
+function subscribePath (name, path, callback) {
+  duix.set(name, null)
+  firestore.doc(path).onSnapshot((snapshot) => {
+    if (snapshot.docs) {
+      duix.set(name, snapshot.docs.map(e => { return { id: e.id, ...e.data() } }))
+    } else {
+      duix.set(name, snapshot.data())
+    }
+  })
+  return duix.subscribe(name, callback)
+}
+
+function addUser (data) {
+  const addUserFunction = firebase.functions().httpsCallable('user-adminAddUser')
+  return addUserFunction(data)
+}
+
 // leave the export, even if you don't use it
 export default ({ app, router, Vue }) => {
   Vue.use(FieryVue)
@@ -72,9 +105,13 @@ export default ({ app, router, Vue }) => {
     app: fbapp.firebase_,
     emailCred: firebase.auth.EmailAuthProvider.credential,
     auth: fbapp.auth(),
-    store: firestore,
+    firestore: firestore,
     functions: callCloudFunction,
     user: user,
-    userData: userData
+    userData: userData,
+    store: store,
+    subscribe: subscribe,
+    subscribePath: subscribePath,
+    addUser
   }
 }

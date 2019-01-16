@@ -19,7 +19,7 @@
         <q-popover>
           <q-list link>
             <q-item v-close-overlay @click.native="editUser">Edit</q-item>
-            <q-item v-close-overlay @click.native="removeUser">Remove</q-item>
+            <q-item v-close-overlay @click.native="removeUser" v-if="this.data.id !== this.$firebase.auth.currentUser.uid">Remove</q-item>
             <q-item v-close-overlay @click.native="setReal">Set Real</q-item>
           </q-list>
         </q-popover>
@@ -30,7 +30,7 @@
 
 <script>
 export default {
-  // name: 'ComponentName',
+  name: 'UserItem',
   props: {
     data: {
       type: Object,
@@ -48,7 +48,12 @@ export default {
       console.log('edit user', this.data.id)
     },
     removeUser () {
-      console.log('remove user', this.data.id)
+      console.log(this.$firebase.user())
+      if (this.data.id !== this.$firebase.auth.currentUser.uid) {
+        console.log('remove user', this.data.id)
+      } else {
+        console.log('remove user', 'CANNOT REMOVE SELF!')
+      }
     },
     setReal () {
       this.$firebase.functions('user-addReal', { email: this.data.email }).then((res) => {
