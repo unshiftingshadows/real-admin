@@ -31,11 +31,20 @@
         </q-field>
       </div>
       <div class="col-12">
-        <q-select
+        <!-- <q-select
           v-model="churchid"
           :options="churchOptions"
           float-label="Church"
-        />
+        /> -->
+        <q-search v-model="churchSearch" placeholder="Search..." color="dark" inverted icon="fas fa-search">
+          <q-autocomplete
+            @search="search"
+            @selected="selected"
+            ref="searchModal"
+            :max-results="5"
+            value-field="label"
+          />
+        </q-search>
       </div>
       <div class="col-12">
         <q-select
@@ -59,6 +68,7 @@
 <script>
 import { Notify } from 'quasar'
 import { required, email } from 'vuelidate/lib/validators'
+const Fuse = require('fuse.js')
 
 const defaultUser = {
   name: {
@@ -96,6 +106,7 @@ export default {
         }
       ],
       churchOptions: [],
+      churchSearch: '',
       loading: false
     }
   },
@@ -116,6 +127,13 @@ export default {
           value: e.id
         }
       })
+      if (this.churchOptions.length === 0) {
+        Notify.create({
+          type: 'negative',
+          message: 'Churches were not pulled properly...',
+          position: 'bottom-left'
+        })
+      }
     },
     show () {
       console.log('show', this)
@@ -148,6 +166,16 @@ export default {
           position: 'bottom-left'
         })
       })
+    },
+    search (terms, done) {
+      console.log('searching...')
+      const fuse = new Fuse(this.churchOptions, { keys: ['label'] })
+      done(fuse.search(terms))
+    },
+    selected (item) {
+      console.log('selected item', item)
+      this.churchSearch = item.label
+      this.churchid = item.value
     }
   }
 }

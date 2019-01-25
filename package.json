@@ -16,6 +16,7 @@
     "duix": "^1.0.5",
     "fiery-vue": "^0.7.0",
     "firebase": "^5.5.1",
+    "fuse.js": "^3.3.0",
     "vuelidate": "^0.7.4"
   },
   "devDependencies": {
