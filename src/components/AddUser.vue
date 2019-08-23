@@ -36,7 +36,7 @@
           :options="churchOptions"
           float-label="Church"
         /> -->
-        <q-search v-model="churchSearch" placeholder="Search..." color="dark" inverted icon="fas fa-search">
+        <q-search v-model="churchSearch" placeholder="Search for church..." color="dark" inverted icon="fas fa-search">
           <q-autocomplete
             @search="search"
             @selected="selected"
